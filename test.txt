@@ -1,0 +1,36 @@
+raspberrypi:~/go/src/rpio_stuff $ go run test_debounce.go 
+11111111
+Watching Pin 13...
+2019-05-05 18:07:53.699421139 -0400 EDT
+pressed_started
+pressed stableized
+left 1st loop
+pressed Up
+left 2nd loop
+2019-05-05 18:07:53.699421139 -0400 EDT
+ Pin 13 is %v false
+2019-05-05 18:07:54.806610584 -0400 EDT 1107189445
+
+2019-05-05 18:07:54.807136257 -0400 EDT
+pressed_started
+pressed stableized
+left 1st loop
+pressed Up
+left 2nd loop
+2019-05-05 18:07:54.807136257 -0400 EDT
+ Pin 13 is %v false
+2019-05-05 18:07:54.807415942 -0400 EDT 279685
+
+2019-05-05 18:07:54.807779064 -0400 EDT
+pressed_started
+pressed stableized
+left 1st loop
+pressed Up
+left 2nd loop
+2019-05-05 18:07:54.807779064 -0400 EDT
+ Pin 13 is %v true
+2019-05-05 18:07:54.827140727 -0400 EDT 19361663^Cpi@raspberrypi:~/go/src/rpio_stuff $ ^C
+
+
+very short dah
+Seems to be reentering the dah loop???
