@@ -43,31 +43,41 @@ func main() {
 	pin.PullUp()
 	
 	entered  := false
+	entered1 := false
 
 	// capture exit signals to ensure resources are released on exit.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, os.Kill)
 	defer signal.Stop(quit)
 	last := time.Now()
+	t := last
 	
 	err = pin.Watch(gpio.EdgeFalling, func(pin *gpio.Pin) {
 		if !entered {
+			last = time.Now() # first bounce
 			entered = true;
+			fmt.Println("pressed_started")
+			fmt.Println(" Pin 13 is %v", pin.Read())
 			return
+		} 
+		if !entered {
+			t = time.Now()
+			//sec := t.UnixNano()
+			diff := t.Sub(last)
+			ns := diff.Nanoseconds()
+			fmt.Print("another bounce")
+			fmt.Println(int64(ns))
+			return
+
 		}
-		fmt.Println("pressed_started")
-		fmt.Println(" Pin 13 is %v", pin.Read())
-		t := time.Now()
 		
-		//sec := t.UnixNano()
-		diff := t.Sub(last)
-		ns := diff.Nanoseconds()
-		last = t
+		
+		
 		
 		//fmt.Println(" Pin 13 is %v", pin.Read())
 		fmt.Print(t)
 		fmt.Print(" ")
-		fmt.Print(int64(ns))
+		
 		
 	})
 	if err != nil {
