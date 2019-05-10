@@ -34,3 +34,25 @@ left 2nd loop
 
 very short dah
 Seems to be reentering the dah loop???
+=====================================
+Watching Pin 13...
+pressed_started
+ Pin 13 is %v false
+another bounce 541503
+another bounce 846863
+another bounce 1131078
+==============================
+^Cpi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+Watching Pin 13...
+pressed_started
+ Pin 13 is %v false
+another bounce 421713
+another bounce 553534
+===================================
+^Cpi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+Watching Pin 13...
+pressed_started
+ Pin 13 is %v false
+another bounce 1025820
+another bounce 1467950
+

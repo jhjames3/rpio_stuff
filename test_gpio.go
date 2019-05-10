@@ -16,6 +16,13 @@ const  (
 	SPACE
 	)
 
+func getNano(last time.Time) int64 {
+	t := time.Now()
+	diff := t.Sub(last)
+	ns := diff.Nanoseconds()
+	return ns
+}
+
 func main() {
 	err := gpio.Open()
 	if err != nil {
@@ -44,6 +51,7 @@ func main() {
 	
 	entered  := false
 	entered1 := false
+	entered2 := false
 
 	// capture exit signals to ensure resources are released on exit.
 	quit := make(chan os.Signal, 1)
@@ -54,30 +62,32 @@ func main() {
 	
 	err = pin.Watch(gpio.EdgeFalling, func(pin *gpio.Pin) {
 		if !entered {
-			last = time.Now() # first bounce
 			entered = true;
+			return
+		}
+		if !entered1 {
+			last = time.Now()// real first bounce compare time to this one
 			fmt.Println("pressed_started")
 			fmt.Println(" Pin 13 is %v", pin.Read())
-			return
-		} 
-		if !entered {
-			t = time.Now()
-			//sec := t.UnixNano()
-			diff := t.Sub(last)
-			ns := diff.Nanoseconds()
-			fmt.Print("another bounce")
-			fmt.Println(int64(ns))
-			return
-
+			entered1 = true;
 		}
+		if !entered2 {
+			ns := getNano(last) 
+			if ns > 2000000 {
+				entered2 = true
+				return;
+			}
+			for {
+				ns = getNano(last) 
+				if ns > 2000000 {
+					break;
+				}	
+			}
 		
-		
-		
-		
-		//fmt.Println(" Pin 13 is %v", pin.Read())
-		fmt.Print(t)
-		fmt.Print(" ")
-		
+			fmt.Println(" Pin 13 is %v", pin.Read())
+			fmt.Print(t)
+			fmt.Print(" we have a dah")	
+		}
 		
 	})
 	if err != nil {
