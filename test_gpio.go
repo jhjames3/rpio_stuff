@@ -8,6 +8,10 @@ import "time"
 
 var pin1 *gpio.Pin // dah  when grounded ie false
 var pin2 *gpio.Pin // dit
+var marks Mark[]
+var entered  = false
+var entered1 = false
+vaf entered2 = false
 type Mark int
 const  (
 	Unknown Mark = iota
@@ -16,6 +20,8 @@ const  (
 	SPACE
 	)
 
+
+
 func getNano(last time.Time) int64 {
 	t := time.Now()
 	diff := t.Sub(last)
@@ -23,40 +29,12 @@ func getNano(last time.Time) int64 {
 	return ns
 }
 
-func main() {
-	err := gpio.Open()
-	if err != nil {
-		panic(err)
-	}
-	defer gpio.Close()
-	
-	//pin1 = gpio.NewPin(gpio.GPIO13) //pin 13 
-	//pin1.Input()
-	
-	//pin2 = gpio.NewPin(gpio.GPIO27) // pin 27 
-	//pin2.Input()
-	
-	//var pin1_state = pin1.Read()
-	//var pin2_state = pin2.Read()
-	
-	//println(pin1_state)
-	//println(pin2_state)
-	
-	//var key = key_read()
-	//println(key)
-	
-	pin := gpio.NewPin(gpio.GPIO13)
-	pin.Input()
-	pin.PullUp()
-	
-	entered  := false
-	entered1 := false
-	entered2 := false
+func watch_pin_goUp (pin gpio.Pin) {
 
-	// capture exit signals to ensure resources are released on exit.
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, os.Kill)
-	defer signal.Stop(quit)
+}
+
+func watch_pin_goDown (pin gpio.Pin) {
+	// init times
 	last := time.Now()
 	t := last
 	
@@ -83,17 +61,58 @@ func main() {
 					break;
 				}	
 			}
-		
+			// fixme loop on dah/dit time
 			fmt.Println(" Pin 13 is %v", pin.Read())
 			fmt.Print(t)
 			fmt.Print(" we have a dah")	
+			mark := key_read()
+			save_mark(mark)
+			// fixme end loop on pin up
 		}
 		
 	})
 	if err != nil {
 		panic(err)
 	}
+}
+
+func save_mark (mark Mark) {
+	marks.append(mark)
+	fmt.Print(" marks: ")
+	for _,element := range marks{
+        //fmt.Println(index)
+        fmt.Println(element)        
+    } 
+}
+
+func main() {
+	err := gpio.Open()
+	if err != nil {
+		panic(err)
+	}
+	defer gpio.Close()
+	
+	pin1 = gpio.NewPin(gpio.GPIO13) // dah
+	pin1.Input()
+	pin1.PullUp()
+	pin2 = gpio.NewPin(gpio.GPIO27) // dit
+	pin2.Input()
+	pin2.PullUp()
+	
+	entered  := false
+	entered1 := false
+	entered2 := false
+
+	// capture exit signals to ensure resources are released on exit.
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, os.Kill)
+	defer signal.Stop(quit)
+	
 	defer pin.Unwatch()
+
+	for {
+		watch_pin_goDown(pin1)
+	}
 
 	// In a real application the main thread would do something useful here.
 	// But we'll just run for a minute then exit.
@@ -130,41 +149,3 @@ func B2I( b gpio.Level) int8 {
 	return 0
 }
 		
-
-//func key_loop(mark long) {
-	
-	//var state uint8 = 3
-	//var last uint8
-	//var ultimatic uint8
-	//var staged uint8 0
-	//var mcode=0x80
-	//var ret uint8 
-	
-	//var key uint8 = key_read()
-	//switch state {
-		//case 1: // waiting until read for read
-			
-			//break
-		//case 2: // waiting and reading
-			
-			//fallthrough
-		//case 3: // idle, spacing
-			
-			
-			
-			
-			//break
-		//case 4: 
-			
-			//break
-		//case 5:
-			//fallthrough
-		//case 6:
-			
-			
-			
-		
-		//return ret
-	//}
-	
-//}
