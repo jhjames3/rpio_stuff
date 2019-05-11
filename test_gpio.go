@@ -11,7 +11,7 @@ var pin2 *gpio.Pin // dit
 
 var entered  = false
 var entered1 = false
-var entered2 = false
+var WAITFORBOUNCE int64 = 5000000
 
 type Mark int
 const  (
@@ -43,39 +43,53 @@ func watch_pin_goUp (pin *gpio.Pin) {
 func watch_pin_goDown (pin *gpio.Pin, err error ) {
 	// init times
 	last := time.Now()
-	t := last
 	
 	err = pin.Watch(gpio.EdgeFalling, func(pin *gpio.Pin) {
-		if !entered {
-			entered = true;
-			return
+		if !entered { // ignore first one seems to do a false 3 on start up
+			//fmt.Println(" 0 key is %v", key())
+			key := key()
+			if key != 3 {
+				last = time.Now()// real first bounce compare time to this one
+				fmt.Println("pressed_started")
+				//fmt.Println(" 1 key is %v", key())
+				entered = true;
+				return
+			}
 		}
 		if !entered1 {
-			last = time.Now()// real first bounce compare time to this one
-			fmt.Println("pressed_started")
-			//fmt.Println(" Pin 13 is %v", pin.Read())
-			entered1 = true;
-		}
-		if !entered2 {
-			ns := getNano(last) 
-			if ns > 2000000 {
-				entered2 = true
-				return;
+			key := key()
+			if key == 3 {
+				entered  = false
+				entered1 = false
+				pin1.PullUp()
+				pin2.PullUp()
+				return
 			}
 			for {
-				ns = getNano(last) 
-				if ns > 2000000 {
+				ns := getNano(last) 
+				if ns > WAITFORBOUNCE {
 					break;
 				}	
 			}
 			// fixme loop on dah/dit time
-			//fmt.Println(" Pin 13 is %v", pin.Read())
-			fmt.Print(t)
-			fmt.Println(" we have a dah")	
+			fmt.Println(last)
+			t := time.Now()
+			fmt.Println(t)
+			//
 			mark := key_read()
+			if mark == DIT {
+				fmt.Println(" we have a dit")
+			}
+			if mark == DAH {
+				fmt.Println(" we have a dah")
+			}
 			save_mark(mark)
 			fmt.Println(marks)
 			// fixme end loop on pin up
+			entered  = false
+			entered1 = false
+			pin1.PullUp()
+			pin2.PullUp()
 			
 		}
 		
@@ -112,9 +126,10 @@ func main() {
 	defer pin1.Unwatch()
 	defer pin2.Unwatch()
 
-	//for {
+	
 	watch_pin_goDown(pin1, err)
-	//}
+	watch_pin_goDown(pin2, err)
+	
 
 	// In a real application the main thread would do something useful here.
 	// But we'll just run for a minute then exit.
@@ -125,18 +140,23 @@ func main() {
 	}
 }
 
-// key is 2 if dah and a 1 if dit single state key 3 if neither closed
-// this returns Mark: DIT DAH or SPACE as 1, 2 or 3
-func  key_read() Mark {
+func key() int8 {
 	var k0 = B2I(pin1.Read())
 	var k1 = B2I(pin2.Read())
 	k0 <<= 1
 	var key = (k0|k1)
+	return key
+}
+
+// key is 2 if dah and a 1 if dit single state key 3 if neither closed
+// this returns Mark: DIT DAH or SPACE as 1, 2 or 3
+func  key_read() Mark {
+	var key = key()
 	switch key {
 	case 1: 
-		return DIT
-	case 2: 
 		return DAH
+	case 2: 
+		return DIT
 	case 3: 
 		return SPACE
 	default:
