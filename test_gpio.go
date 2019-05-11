@@ -8,10 +8,11 @@ import "time"
 
 var pin1 *gpio.Pin // dah  when grounded ie false
 var pin2 *gpio.Pin // dit
-var marks Mark[]
+
 var entered  = false
 var entered1 = false
-vaf entered2 = false
+var entered2 = false
+
 type Mark int
 const  (
 	Unknown Mark = iota
@@ -19,7 +20,13 @@ const  (
 	DAH
 	SPACE
 	)
+var marks [30]Mark
+var marIndex = 0
 
+func save_mark (mark Mark) {
+	marks[marIndex] = mark
+	marIndex++        
+    } 
 
 
 func getNano(last time.Time) int64 {
@@ -29,11 +36,11 @@ func getNano(last time.Time) int64 {
 	return ns
 }
 
-func watch_pin_goUp (pin gpio.Pin) {
+func watch_pin_goUp (pin *gpio.Pin) {
 
 }
 
-func watch_pin_goDown (pin gpio.Pin) {
+func watch_pin_goDown (pin *gpio.Pin, err error ) {
 	// init times
 	last := time.Now()
 	t := last
@@ -46,7 +53,7 @@ func watch_pin_goDown (pin gpio.Pin) {
 		if !entered1 {
 			last = time.Now()// real first bounce compare time to this one
 			fmt.Println("pressed_started")
-			fmt.Println(" Pin 13 is %v", pin.Read())
+			//fmt.Println(" Pin 13 is %v", pin.Read())
 			entered1 = true;
 		}
 		if !entered2 {
@@ -62,12 +69,14 @@ func watch_pin_goDown (pin gpio.Pin) {
 				}	
 			}
 			// fixme loop on dah/dit time
-			fmt.Println(" Pin 13 is %v", pin.Read())
+			//fmt.Println(" Pin 13 is %v", pin.Read())
 			fmt.Print(t)
-			fmt.Print(" we have a dah")	
+			fmt.Println(" we have a dah")	
 			mark := key_read()
 			save_mark(mark)
+			fmt.Println(marks)
 			// fixme end loop on pin up
+			
 		}
 		
 	})
@@ -76,16 +85,8 @@ func watch_pin_goDown (pin gpio.Pin) {
 	}
 }
 
-func save_mark (mark Mark) {
-	marks.append(mark)
-	fmt.Print(" marks: ")
-	for _,element := range marks{
-        //fmt.Println(index)
-        fmt.Println(element)        
-    } 
-}
-
 func main() {
+	
 	err := gpio.Open()
 	if err != nil {
 		panic(err)
@@ -99,20 +100,21 @@ func main() {
 	pin2.Input()
 	pin2.PullUp()
 	
-	entered  := false
-	entered1 := false
-	entered2 := false
+	//entered  := false
+	//entered1 := false
+	//entered2 := false
 
 	// capture exit signals to ensure resources are released on exit.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, os.Kill)
 	defer signal.Stop(quit)
 	
-	defer pin.Unwatch()
+	defer pin1.Unwatch()
+	defer pin2.Unwatch()
 
-	for {
-		watch_pin_goDown(pin1)
-	}
+	//for {
+	watch_pin_goDown(pin1, err)
+	//}
 
 	// In a real application the main thread would do something useful here.
 	// But we'll just run for a minute then exit.
