@@ -32,27 +32,100 @@ left 2nd loop
 2019-05-05 18:07:54.827140727 -0400 EDT 19361663^Cpi@raspberrypi:~/go/src/rpio_stuff $ ^C
 
 
-very short dah
-Seems to be reentering the dah loop???
-=====================================
+pi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
 Watching Pin 13...
 pressed_started
- Pin 13 is %v false
-another bounce 541503
-another bounce 846863
-another bounce 1131078
-==============================
-^Cpi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+2019-05-11 10:29:20.51332948 -0400 EDT
+2019-05-11 10:29:20.519308293 -0400 EDT
+ we have a dah
+[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] correct
+pressed_started
+2019-05-11 10:29:20.520035579 -0400 EDT
+2019-05-11 10:29:27.252437444 -0400 EDT
+ we have a dah
+[2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] correct
+pressed_started
+2019-05-11 10:29:15.388432382 -0400 EDT
+2019-05-11 10:29:33.48181301 -0400 EDT
+ we have a dit
+[2 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] next 3 from one dit
+pressed_started
+2019-05-11 10:29:33.482573995 -0400 EDT
+2019-05-11 10:29:33.487694063 -0400 EDT
+ we have a dit
+[2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+pressed_started
+2019-05-11 10:29:33.488399423 -0400 EDT
+2019-05-11 10:29:33.541769523 -0400 EDT
+[2 2 1 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+===
+
+pi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
 Watching Pin 13...
 pressed_started
- Pin 13 is %v false
-another bounce 421713
-another bounce 553534
-===================================
-^Cpi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+2019-05-11 10:32:47.588494689 -0400 EDT
+2019-05-11 10:32:47.594622042 -0400 EDT
+ we have a dit
+[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] correct press and hold
+pressed_started
+^Cpi@raspberrypi:~/go/src/rpio_stuff $ ^C
+
+pi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
 Watching Pin 13...
 pressed_started
- Pin 13 is %v false
-another bounce 1025820
-another bounce 1467950
+5001475 ok
+2019-05-11 10:35:37.006678415 -0400 EDT
+2019-05-11 10:35:37.012725872 -0400 EDT
+ we have a dit
+[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] correct press and hold
+pressed_started
+
+=====
+
+Watching Pin 13...
+pressed_started
+22000465
+2019-05-11 10:47:07.759038372 -0400 EDT
+2019-05-11 10:47:07.782260964 -0400 EDT
+ we have a dah
+[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] good 
+pressed_started
+1586518303
+2019-05-11 10:47:07.78308351 -0400 EDT
+2019-05-11 10:47:09.369803894 -0400 EDT
+ we have a dah
+[2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] this seems too big ns
+Maybe next not set
+pressed_started
+22000935
+2019-05-11 10:47:09.370657742 -0400 EDT
+2019-05-11 10:47:09.392802009 -0400 EDT
+ we have a dah
+[2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] yes
+
+===
+Watching Pin 13...
+pressed_started
+22001319
+2019-05-11 10:59:01.172069179 -0400 EDT
+2019-05-11 10:59:01.195433969 -0400 EDT
+ we have a dah
+[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] good
+pressed_started
+1379860449 ??????? so big
+2019-05-11 10:59:01.19662838 -0400 EDT
+2019-05-11 10:59:02.577124185 -0400 EDT
+ we have a dah
+[2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] only one dah
+pressed_started
+22001058
+2019-05-11 10:59:02.580067895 -0400 EDT
+2019-05-11 10:59:02.602633008 -0400 EDT
+ we have a dah
+[2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+
+
+
+
 
