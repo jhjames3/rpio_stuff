@@ -51,6 +51,13 @@ func getMS(last time.Time) int64 {
 	return ms
 }
 
+func returnToWaitingState() {
+	entered  = false
+	entered1 = false
+	pin1.PullUp()
+	pin2.PullUp()
+}
+
 func waitForDitTimeDown() bool {
 	for {
 		key := key()
@@ -136,12 +143,16 @@ func waitForStableDown() bool {
 func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 	
 	err = pin.Watch(gpio.EdgeBoth, func(pin *gpio.Pin) {
+		// assumed
+		//entered  = false
+		//entered1 = false
+
 		if !entered { // possible 3 on start up
 			key := key()
 			if key != 3 {
 				set_last()// real first bounce compare time to this one
 				fmt.Println("pressed_started")
-				entered = waitForStableDown() // we have key down?
+				entered = waitForStableDown() // we have a key down
 				
 			} else {
 				//ie both up
@@ -149,59 +160,45 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				return
 			}
 		}
-		// possible bounch
+		// we have met the bounch delay entered = true&& entered1 == false
 		if !entered1 {
 			key := key()
-			if key != 3 {
+			if key != 3 { 
 				mark := key_read()
 				if mark == DIT {
 					fmt.Println(" we have a dit")
 					for {
 						save_mark(mark)
-						if !waitForDitTimeDown() {
-							break
-						} else {
-							entered  = false
-							entered1 = false
-							pin1.PullUp()
-							pin2.PullUp()
+						entered1 = !waitForDitTimeDown() // return true if still down keep looking
+						if !entered1 { // key up
+							returnToWaitingState()
 							return
+						} else { // key still down
+							return // continue looking
 						}
-					} 
-					return
-				}
+					} // end for
+				} // end dit
 				if mark == DAH {
 					fmt.Println(" we have a dah")
 					for {
 						save_mark(mark)
-						if !waitForDahTimeDown() {
-							break
-						} else {
-							entered  = false
-							entered1 = false
-							pin1.PullUp()
-							pin2.PullUp()
+						entered1 = !waitForDahTimeDown() // return true if still down keep looking
+						if !entered1 { // keyup
+							returnToWaitingState()
 							return
+						} else { // key still down
+							return // continue looking entered1 == true
 						}
-					}
-					return
-				}
+					} // end for
+				} // end dah
 			} else  { // key == 3 start over?
 				fmt.Println(" start over")
-				entered  = false
-				entered1 = false
-				pin1.PullUp()
-				pin2.PullUp()
+				returnToWaitingState()
 				return
 			}
-			// start next mark timing
+		} else {
 			fmt.Println(marks)
-			// fixme end loop on pin up with time
-			
-			entered  = false
-			entered1 = false
-			pin1.PullUp()
-			pin2.PullUp()
+			returnToWaitingState()
 			return
 		}
 	})
