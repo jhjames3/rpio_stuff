@@ -22,8 +22,8 @@ var DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
 type Mark int
 const  (
 	Unknown Mark = iota
-	DIT
 	DAH
+	DIT
 	SPACE
 	)
 var marks [30]Mark
@@ -54,7 +54,7 @@ func getMS(last time.Time) int64 {
 func waitForDitTimeDown() bool {
 	for {
 		key := key()
-		if key != 3 {
+		if key == 1 { // Dit key down
 			ms := getMS(last) 
 			if ms > DIT_TIME_ms {
 				set_last()
@@ -72,7 +72,8 @@ func waitForDitTimeDown() bool {
 func waitForDahTimeDown() bool {
 	for {
 		key := key()
-		if key != 3 { // key down
+		fmt.Println(key)
+		if key == 2 { // Dah key down 
 			ms := getMS(last) 
 			if ms > DAH_TIME_ms {
 				set_last()
@@ -121,6 +122,7 @@ func waitForStableUp() bool {
 func waitForStableDown() bool {
 	for {
 		key := key()
+		fmt.Println(key)
 		if key != 3 {
 			ns := getNano(last) 
 			if ns > WAITFORBOUNCE {
@@ -128,7 +130,9 @@ func waitForStableDown() bool {
 				fmt.Println(" key down")
 				return true
 			}
-			break;	
+		} else {
+			fmt.Println(key)
+			break
 		}
 	}
 	fmt.Println("waitForStableDown: key up")
@@ -138,6 +142,7 @@ func waitForStableDown() bool {
 func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 	
 	err = pin.Watch(gpio.EdgeBoth, func(pin *gpio.Pin) {
+		Start: 
 		if !entered { // possible 3 on start up
 			key := key()
 			if key != 3 {
@@ -146,9 +151,14 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				entered = waitForStableDown() // if true we have key down for long time
 				if !entered {
 					fmt.Println("back to start !entered ")
-					return
+					fmt.Print("entered: ")
+					fmt.Println(entered)
+					goto Start
+				} else {
+					fmt.Print("entered: ")
+					fmt.Println(entered)
 				}
-			} else {
+			} else { //== 3
 				//ie both up
 				entered = !waitForStableUp() // we have key up?
 				return
@@ -201,7 +211,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				entered1 = false
 				pin1.PullUp()
 				pin2.PullUp()
-				return
+				goto Start
 			}
 			// start next mark timing
 			fmt.Println(marks)
@@ -211,7 +221,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			entered1 = false
 			pin1.PullUp()
 			pin2.PullUp()
-			return
+			goto Start
 		}
 	})
 	if err != nil {
