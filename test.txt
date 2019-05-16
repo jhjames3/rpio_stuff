@@ -39,3 +39,37 @@ last: 2019-05-16 10:59:33.729057742 -0400 EDT
  end dit
 last: 2019-05-16 10:59:33.841690218 -0400 EDT
 pressed_started
+
+
+===
+
+both up 
+Watching Pins 13 and 27...wpm = 11
+both up 
+pressed_started
+last: 2019-05-16 16:29:27.351991215 -0400 EDT
+1224676 key down
+[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+2 mark
+ we have a start dit
+ we have a end dit
+both up 
+pressed_started
+last: 2019-05-16 16:29:47.918579128 -0400 EDT
+124738 key down
+[2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+2 mark
+ we have a start dit
+ we have a end dit
+both up 
+pressed_started
+last: 2019-05-16 16:29:47.920050052 -0400 EDT
+177342 key down
+[2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+2 mark
+ we have a start dit
+ we have a end dit
+both up 
