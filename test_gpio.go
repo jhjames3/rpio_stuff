@@ -34,6 +34,8 @@ func save_mark (mark Mark) {
 		marks[marIndex] = mark
 		marIndex++  
 		fmt.Println(marks)
+	} else {
+		fmt.Print("marks index too big")
 	}      
 } 
     
@@ -54,16 +56,19 @@ func getMS(last time.Time) int64 {
 func waitForDitTimeDown() bool {
 	for {
 		key := key()
-		if key == 1 { // Dit key down
+		if key == 2 { // Dit key down
 			ms := getMS(last) 
 			if ms > DIT_TIME_ms {
-				set_last()
 				fmt.Print(ms)
 				fmt.Print(" ")
 				fmt.Print(DIT_TIME_ms)
-				fmt.Println(" continue dit")
+				fmt.Println(" continue dit ms")
 				return true
+			} else {
+				continue
 			}	
+		} else {
+			break
 		}
 	}
 	return false
@@ -72,20 +77,22 @@ func waitForDitTimeDown() bool {
 func waitForDahTimeDown() bool {
 	for {
 		key := key()
-		fmt.Println(key)
-		if key == 2 { // Dah key down 
-			ms := getMS(last) 
+		ms := getMS(last) 
+		if key == 1 { // Dah key down 
 			if ms > DAH_TIME_ms {
-				set_last()
+				// debug
 				fmt.Print(ms)
 				fmt.Print(" ")
 				fmt.Print(DAH_TIME_ms)
-				fmt.Print(ms)
-				fmt.Println(" continue dah")
+				fmt.Println(" ms")
+				fmt.Println(" continue dah ms")
 				return true
+			} else {
+				continue
 			}	
+		} else {
+			break
 		}
-		break
 	}
 	return false
 }
@@ -111,10 +118,12 @@ func waitForStableUp() bool {
 				//entered = false
 				//entered1 = false
 				return true
-			}
-			break;	
+			} else {
+				continue
+			}	
+		} else {
+			break 
 		}
-		break
 	}
 	return false
 }
@@ -122,7 +131,7 @@ func waitForStableUp() bool {
 func waitForStableDown() bool {
 	for {
 		key := key()
-		fmt.Println(key)
+		//fmt.Println(key)
 		if key != 3 {
 			ns := getNano(last) 
 			if ns > WAITFORBOUNCE {
@@ -131,8 +140,8 @@ func waitForStableDown() bool {
 				return true
 			}
 		} else {
-			fmt.Println(key)
-			break
+			//fmt.Println(key)
+			continue
 		}
 	}
 	fmt.Println("waitForStableDown: key up")
@@ -145,8 +154,8 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 		Start: 
 		if !entered { // possible 3 on start up
 			key := key()
-			if key != 3 {
-				set_last()// real first bounce compare time to this one
+			if key == 1 || key == 2 { // dit or dah down
+				set_last()// real first bounce compare time to this one (up or down)
 				fmt.Println("pressed_started")
 				entered = waitForStableDown() // if true we have key down for long time
 				if !entered {
@@ -157,26 +166,34 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				} else {
 					fmt.Print("entered: ")
 					fmt.Println(entered)
+					goto CheckNext
 				}
 			} else { //== 3
 				//ie both up
-				entered = !waitForStableUp() // we have key up?
-				return
+				 // we have key up wait for next down 
+					return
 			}
 		}
 		// down for "long" time
 		// possible bounch
+		CheckNext:
 		if !entered1 {
 			fmt.Println("entered1 false")
 			key := key()
 			if key != 3 {
 				mark := key_read()
+				fmt.Print(mark)
+				fmt.Println(" mark")
 				if mark == DIT {
+					// start For for number of marks
+					//------------------------------
 					for {
-						save_mark(mark)
-						fmt.Println(" we have a dit")
+						fmt.Println(" we have a start dit")
 						if waitForDitTimeDown() { // if timed out return true
-							continue // another dit
+							save_mark(mark)
+							set_last()
+							fmt.Println(" we have a end dit")
+							continue // another dit in this time down
 						} else {
 							fmt.Println(" end dit")
 							entered  = false
@@ -185,13 +202,14 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							pin2.PullUp()
 							return
 						}
-					} 
-					return
+					} // end for loop
 				} else if mark == DAH {
 					for {
-						save_mark(mark)
-						fmt.Println(" we have a dah")
+						fmt.Println(" we have a start dah")
 						if waitForDahTimeDown() { // if timed out return true
+							save_mark(mark)
+							set_last()
+							fmt.Println(" we have a end dah")
 							continue // another dah
 						} else {
 							fmt.Println(" end dah")
@@ -201,8 +219,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							pin2.PullUp()
 							return
 						}
-					}
-					return
+					} // end for loop
 				}
 				fmt.Print("not a dit or a Dah")
 			} else  { // key == 3 up start over?
@@ -211,17 +228,17 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				entered1 = false
 				pin1.PullUp()
 				pin2.PullUp()
-				goto Start
+				return // wait for next down
 			}
 			// start next mark timing
 			fmt.Println(marks)
 			// fixme end loop on pin up with time
-			
+			fmt.Print("should not get here")
 			entered  = false
 			entered1 = false
 			pin1.PullUp()
 			pin2.PullUp()
-			goto Start
+			return
 		}
 	})
 	if err != nil {
@@ -260,7 +277,7 @@ func main() {
 
 	// In a real application the main thread would do something useful here.
 	// But we'll just run for a minute then exit.
-	fmt.Println("Watching Pin 13...")
+	fmt.Println("Watching Pins 13 and 27...")
 	select {
 	case <-time.After(time.Minute):
 	case <-quit:
