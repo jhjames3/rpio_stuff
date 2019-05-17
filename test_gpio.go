@@ -20,13 +20,17 @@ var DIT_TIME_ms int64 = STD_1200/WPM
 var DIT1_TIME_ms int64 = STD_1300/WPM
 var STD_3 int64 = 3
 var DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
+var LETTERTIME int64 = DAH_TIME_ms
+var STD_7 int64 = 7
+var WORDTIME int64 = STD_7*DIT_TIME_ms
 
 type Mark int
 const  (
 	Unknown Mark = iota
 	DAH
 	DIT
-	SPACE
+	SPACE // end word
+	LETTER // END LETTER
 	)
 var marks [30]Mark
 var marIndex = 0
@@ -109,6 +113,46 @@ func getNano(last time.Time) int64 {
 	//fmt.Println(ns)
 	//fmt.Println("--------")
 	return ns
+}
+
+func waitForLetterUp() {
+	for {
+		key := key()
+		if key == 3 {
+			ns := getNano(last) 
+			if ns > LETTERTIME {
+				fmt.Println("key up")
+				//entered = false
+				//entered1 = false
+				return true
+			} else {
+				continue
+			}	
+		} else {
+			break 
+		}
+	}
+	return false
+}
+
+func waitForWordUP() {
+	for {
+		key := key()
+		if key == 3 {
+			ns := getNano(last) 
+			if ns > WORDTIME {
+				fmt.Println("key up")
+				//entered = false
+				//entered1 = false
+				return true
+			} else {
+				continue
+			}	
+		} else {
+			break 
+		}
+	}
+	return false
 }
 
 func waitForStableUp() bool {
@@ -209,11 +253,34 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dit in this time down
 						} else {
+<<<<<<< HEAD
 							fmt.Println(" we have a end dit")
 							entered  = false
 							entered1 = false
 							pin1.PullUp()
 							pin2.PullUp()
+=======
+							isPossibleLetter = waitForLetterUp()
+							if (isPossibleLetter) {
+								isWord = waitForWordUP{
+									if isWord {
+										save_mark(SPACE)
+										message := createMessageForWord()
+										fmt.Println(message)
+										//sendTcp(message)
+										return
+									} else {
+										save_mark(LETTER)
+										return
+									}
+								}
+							}
+							fmt.Println(" end dit")
+							// entered  = false
+							// entered1 = false
+							// pin1.PullUp()
+							// pin2.PullUp()
+>>>>>>> 2197453a5e63c1e2778700280801f26f1a577885
 							return
 						}
 					} // end for loop
@@ -227,11 +294,36 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dah
 						} else {
+<<<<<<< HEAD
 							fmt.Println(" we have a end dah")
 							entered  = false
 							entered1 = false
 							pin1.PullUp()
 							pin2.PullUp()
+=======
+							isPossibleLetter = waitForLetterUp()
+							if (isPossibleLetter) {
+								isWord = waitForWordUP{
+									if isWord {
+										save_mark(SPACE)
+										message := createMessageForWord()
+										fmt.Println(message)
+										//sendTcp(message)
+										return
+									} else {
+										save_mark(LETTER)
+
+
+										return
+									}
+								}
+							}
+							fmt.Println(" end dah")
+							// entered  = false
+							// entered1 = false
+							// pin1.PullUp()
+							// pin2.PullUp()
+>>>>>>> 2197453a5e63c1e2778700280801f26f1a577885
 							return
 						}
 					} // end for loop
@@ -275,6 +367,9 @@ func main() {
 	pin2 = gpio.NewPin(gpio.GPIO27) // dit
 	pin2.Input()
 	pin2.PullUp()
+
+	// setup tcp
+	//openConnection("localhost:6666") 
 	
 
 	// capture exit signals to ensure resources are released on exit.
@@ -329,5 +424,31 @@ func B2I( b gpio.Level) int8 {
 		return 1
 	}
 	return 0
+}
+
+func createMessageForWord() string {
+	var s = "[["
+	var sz = len(s)
+	bool firstMark = true
+	for mark := marks {
+		if mark == DIT {
+			s += '"DIT,"'
+		} else if mark == DAH {
+			s += '"DAH,"'
+		} else if mark = LETTER {
+			sz = len(toSend)
+			if sz > 0 && s[sz-1] == ',' {
+			    s = s[:sz-1]
+			}
+			s += "]["
+		} else if mark == SPACE {
+			sz = len(toSend)
+			if sz > 0 && s[sz-1] == ',' {
+			    s = s[:sz-1]
+			}
+			s += "]]"
+			return s
+		}
+	}
 }
 		
