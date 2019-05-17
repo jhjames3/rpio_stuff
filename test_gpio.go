@@ -159,7 +159,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			key := key()
 			mark = key_read()
 			if key == 1 || key == 2 { // dit or dah down
-				fmt.Println("pressed_started")
+				fmt.Println("gitgit")
 				set_last()// real first bounce compare time to this one (up or down)
 				
 				entered = waitForStableDown() // if true we have key down for long time

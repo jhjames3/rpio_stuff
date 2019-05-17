@@ -73,3 +73,42 @@ entered1 false
  we have a start dit
  we have a end dit
 both up 
+---
+
+af847b3
+run:
+pi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+Watching Pins 13 and 27...wpm = 11
+both up 
+both up 
+gitgit
+last: 2019-05-17 13:09:21.025410804 -0400 EDT
+1605141 key down
+[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+1 mark
+ we have a start dah
+ we have a end dah
+both up 
+both up 
+both up 
+gitgit
+last: 2019-05-17 13:09:27.244706531 -0400 EDT
+164790 key down
+[1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+1 mark
+ we have a start dah
+ we have a end dah
+both up 
+gitgit
+last: 2019-05-17 13:09:27.24600605 -0400 EDT
+106874 key down
+[1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+1 mark
+ we have a start dah
+ we have a end dah
+both up 
+both up 
+both up 
