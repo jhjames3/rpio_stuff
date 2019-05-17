@@ -13,9 +13,11 @@ var entered  = false //down
 var entered1 = false
 var WAITFORBOUNCE int64 = 1700000
 var last time.Time
-var WPM int64 = 11
+var WPM int64 = 10
 var STD_1200 int64 = 1200
+var STD_1300 int64 = 1400
 var DIT_TIME_ms int64 = STD_1200/WPM
+var DIT1_TIME_ms int64 = STD_1300/WPM
 var STD_3 int64 = 3
 var DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
 
@@ -59,11 +61,11 @@ func waitForDitTimeDown() bool {
 		key := key()
 		if key == 2 { // Dit key down
 			ms := getMS(last) 
-			if ms > DIT_TIME_ms {
-				fmt.Print(ms)
-				fmt.Print(" ")
-				fmt.Print(DIT_TIME_ms)
-				fmt.Println(" continue dit ms")
+			if ms > DIT1_TIME_ms {
+				//fmt.Print(ms)
+				//fmt.Print(" ")
+				//fmt.Print(DIT_TIME_ms)
+				//fmt.Println(" continue dit ms")
 				return true
 			} else {
 				continue
@@ -82,11 +84,11 @@ func waitForDahTimeDown() bool {
 		if key == 1 { // Dah key down 
 			if ms > DAH_TIME_ms {
 				// debug
-				fmt.Print(ms)
-				fmt.Print(" ")
-				fmt.Print(DAH_TIME_ms)
-				fmt.Println(" ms")
-				fmt.Println(" continue dah ms")
+				//fmt.Print(ms)
+				//fmt.Print(" ")
+				//fmt.Print(DAH_TIME_ms)
+				//fmt.Println(" ms")
+				//fmt.Println(" continue dah ms")
 				return true
 			} else {
 				continue
@@ -200,9 +202,9 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 					// start For for number of marks
 					//------------------------------
 					for {
-						fmt.Println(" we have a start dit")
+						//fmt.Println(" we have a start dit")
 						if waitForDitTimeDown() { // if timed out return true
-							fmt.Println(" we continue dit")
+							//fmt.Println(" we continue dit")
 							save_mark(mark)
 							set_last()
 							continue // another dit in this time down
@@ -217,10 +219,10 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 					} // end for loop
 				} else if mark == DAH {
 					for {
-						fmt.Println(" we have a start dah")
+						//fmt.Println(" we have a start dah")
 						if waitForDahTimeDown() { // if timed out return true
 							
-							fmt.Println(" we continue dit")
+							//fmt.Println(" we continue dit")
 							save_mark(mark)
 							set_last()
 							continue // another dah
