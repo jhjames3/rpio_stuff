@@ -11,7 +11,7 @@ var pin2 *gpio.Pin // dit
 
 var entered  = false //down
 var entered1 = false
-var WAITFORBOUNCE int64 = 220
+var WAITFORBOUNCE int64 = 1700000
 var last time.Time
 var WPM int64 = 11
 var STD_1200 int64 = 1200
@@ -161,8 +161,11 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			if key == 1 || key == 2 { // dit or dah down
 				fmt.Println("gitgit")
 				set_last()// real first bounce compare time to this one (up or down)
-				
+				ns := getNano(last) 
+				fmt.Print(ns)
+				fmt.Println(" key down")
 				entered = waitForStableDown() // if true we have key down for long time
+				
 				if !entered {
 					//fmt.Println("back to start !entered ")
 					//fmt.Print("entered: ")

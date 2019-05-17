@@ -112,3 +112,39 @@ entered1 false
 both up 
 both up 
 both up 
+
+=====
+=====
+new test. mostly working but continuous dits not correct. keyer =3 code = 5
+
+gitgit
+last: 2019-05-17 13:43:04.084343094 -0400 EDT
+1028897 key down
+1701442 key down
+[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+2 mark
+ we have a start dit
+110 109 continue dit ms
+ we continue dit
+[2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-17 13:43:04.195515734 -0400 EDT
+ we have a start dit
+110 109 continue dit ms
+ we continue dit
+[2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-17 13:43:04.306057598 -0400 EDT
+ we have a start dit
+110 109 continue dit ms
+ we continue dit
+[2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-17 13:43:04.416600869 -0400 EDT
+ we have a start dit
+110 109 continue dit ms
+ we continue dit
+[2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-17 13:43:04.527131171 -0400 EDT
+ we have a start dit
+ we have a end dit
+both up 
+
