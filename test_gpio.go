@@ -11,18 +11,20 @@ var pin2 *gpio.Pin // dit
 
 var entered  = false //down
 var entered1 = false
-var WAITFORBOUNCE int64 = 1700000
 var last time.Time
-var WPM int64 = 10
-var STD_1200 int64 = 1200
-var STD_1300 int64 = 1400
-var DIT_TIME_ms int64 = STD_1200/WPM
-var DIT1_TIME_ms int64 = STD_1300/WPM
-var STD_3 int64 = 3
-var DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
-var LETTERTIME int64 = DAH_TIME_ms
-var STD_7 int64 = 7
-var WORDTIME int64 = STD_7*DIT_TIME_ms
+const WAITFORBOUNCE int64 = 1700000
+
+const WPM int64 = 10
+const STD_1200 int64 = 1200
+const STD_1300 int64 = 1400
+const DIT_TIME_ms int64 = STD_1200/WPM
+const DIT1_TIME_ms int64 = STD_1300/WPM
+const STD_3 int64 = 3
+const DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
+const LETTERTIME int64 = DAH_TIME_ms
+const STD_7 int64 = 7
+const WORDTIME int64 = STD_7*DIT_TIME_ms
+const SIZEMARKS = 50
 
 type Mark int
 const  (
@@ -32,9 +34,15 @@ const  (
 	SPACE // end word
 	LETTER // END LETTER
 	)
-var marks [30]Mark
+var marks [SIZEMARKS]Mark
 var marIndex = 0
 var mark Mark = Unknown
+
+func clearMarks() {
+	for i,_ := range marks {
+		marks[i] = Unknown
+	}
+}
 
 func save_mark (mark Mark) {
 	if marIndex+1 < len(marks) {
@@ -260,6 +268,8 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 										save_mark(SPACE)
 										message := createMessageForWord()
 										fmt.Println(message)
+										clearMarks()
+										fmt.Println(marks)
 										//sendTcp(message)
 										return
 									} else {
@@ -286,16 +296,20 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dah
 						} else {
+							fmt.Println("Dah Up check letter ")
 							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
+								fmt.Println("Dah Up check word ")
 								isWord := waitForWordUP()
 								if isWord {
+									fmt.Println("Is word ")
 									save_mark(SPACE)
 									message := createMessageForWord()
 									fmt.Println(message)
 									//sendTcp(message)
 									return
 								} else {
+									fmt.Println("Is letter ")
 									save_mark(LETTER)
 									return
 								}
@@ -315,6 +329,8 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							save_mark(SPACE)
 							message := createMessageForWord()
 							fmt.Println(message)
+							clearMarks()
+							fmt.Println(marks)
 							//sendTcp(message)
 							return
 						} else {
@@ -322,10 +338,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							return
 						}
 						fmt.Println(" end dah")
-						// entered  = false
-						// entered1 = false
-						// pin1.PullUp()
-						// pin2.PullUp()
 						return
 					} // end for loop
 				}
@@ -431,9 +443,9 @@ func createMessageForWord() string {
 	var sz = len(s)
 	for _, mark := range marks {
 		if mark == DIT {
-			s += "\"DIT,\""
+			s += "\"DIT\","
 		} else if mark == DAH {
-			s += "\"DAH,\""
+			s += "\"DAH\","
 		} else if mark == LETTER {
 			sz = len(s)
 			if sz > 0 && s[sz-1] == ',' {
