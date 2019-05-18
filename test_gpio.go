@@ -11,18 +11,20 @@ var pin2 *gpio.Pin // dit
 
 var entered  = false //down
 var entered1 = false
-var WAITFORBOUNCE int64 = 1700000
 var last time.Time
-var WPM int64 = 10
-var STD_1200 int64 = 1200
-var STD_1300 int64 = 1400
-var DIT_TIME_ms int64 = STD_1200/WPM
-var DIT1_TIME_ms int64 = STD_1300/WPM
-var STD_3 int64 = 3
-var DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
-var LETTERTIME int64 = DAH_TIME_ms
-var STD_7 int64 = 7
-var WORDTIME int64 = STD_7*DIT_TIME_ms
+const WAITFORBOUNCE int64 = 1700000
+
+const WPM int64 = 10
+const STD_1200 int64 = 1200
+const STD_1300 int64 = 1400
+const DIT_TIME_ms int64 = STD_1200/WPM
+const DIT1_TIME_ms int64 = STD_1300/WPM
+const STD_3 int64 = 3
+const DAH_TIME_ms int64 = STD_3*DIT_TIME_ms
+const LETTERTIME int64 = DAH_TIME_ms
+const STD_7 int64 = 7
+const WORDTIME int64 = STD_7*DIT_TIME_ms
+const SIZEMARKS = 50
 
 type Mark int
 const  (
@@ -32,9 +34,16 @@ const  (
 	SPACE // end word
 	LETTER // END LETTER
 	)
-var marks [30]Mark
+var marks [SIZEMARKS]Mark
 var marIndex = 0
 var mark Mark = Unknown
+var markWeAreWorking Mark = Unknown
+
+func clearMarks() {
+	for i,_ := range marks {
+		marks[i] = Unknown
+	}
+}
 
 func save_mark (mark Mark) {
 	if marIndex+1 < len(marks) {
@@ -115,7 +124,7 @@ func getNano(last time.Time) int64 {
 	return ns
 }
 
-func waitForLetterUp() {
+func waitForLetterUp() bool {
 	for {
 		key := key()
 		if key == 3 {
@@ -135,7 +144,7 @@ func waitForLetterUp() {
 	return false
 }
 
-func waitForWordUP() {
+func waitForWordUP() bool {
 	for {
 		key := key()
 		if key == 3 {
@@ -196,10 +205,14 @@ func waitForStableDown() bool {
 }
 
 func watch_pin_goBoth (pin *gpio.Pin, err error ) {
-	
+	entered  = false
+	entered1 = false
 	err = pin.Watch(gpio.EdgeBoth, func(pin *gpio.Pin) {
-		entered  = false
-		entered1 = false
+		fmt.Println("At Start")
+		fmt.Print("entered: ")
+		fmt.Println(entered)
+		fmt.Print("entered1: ")
+		fmt.Println(entered1)
 		//Start: 
 		if !entered { // possible 3 on start up
 			key := key()
@@ -211,15 +224,13 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				fmt.Print(ns)
 				fmt.Println(" key down")
 				entered = waitForStableDown() // if true we have key down for long time
-				
 				if !entered {
 					//fmt.Println("back to start !entered ")
 					//fmt.Print("entered: ")
 					//fmt.Println(entered)
 					//goto Start
 					return
-				} else {// true
-					
+				} else { // true
 					save_mark(mark)
 					//fmt.Print("first mark: ")
 					//fmt.Println(entered)
@@ -228,6 +239,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			} else { //== 3
 				//ie both up
 					fmt.Println("both up ")
+					entered = false
 				 // we have key up wait for next down 
 					return
 			}
@@ -237,12 +249,15 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 		CheckNext:
 		if !entered1 {
 			fmt.Println("entered1 false")
+			entered1 = true
+			fmt.Println("entered1 true")
 			key := key()
-			if key != 3 {
+			if key != 3 { // key down
 				mark = key_read()
 				fmt.Print(mark)
 				fmt.Println(" mark")
 				if mark == DIT {
+					markWeAreWorking = DIT
 					// start For for number of marks
 					//------------------------------
 					for {
@@ -252,14 +267,21 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							save_mark(mark)
 							set_last()
 							continue // another dit in this time down
-						} else {
-							isPossibleLetter = waitForLetterUp()
+						} else { // may never get here when key goes up
+							// should we return here for up processing?
+							fmt.Println("waitForDitTimeDown retured false")
+							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
-								isWord = waitForWordUP{
+								isWord := waitForWordUP() 
 									if isWord {
 										save_mark(SPACE)
 										message := createMessageForWord()
 										fmt.Println(message)
+										clearMarks()
+										entered = false
+										entered1 = false
+										markWeAreWorking = Unknown
+										//fmt.Println(marks)
 										//sendTcp(message)
 										return
 									} else {
@@ -268,50 +290,59 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 									}
 								}
 							}
-							fmt.Println(" end dit")
-							// entered  = false
-							// entered1 = false
-							// pin1.PullUp()
-							// pin2.PullUp()
-							return
-						}
-					} // end for loop
+						fmt.Println(" end dit")
+						// entered  = false
+						// entered1 = false
+						// pin1.PullUp()
+						// pin2.PullUp()
+						return
+					} // end for loop 
 				} else if mark == DAH {
+					markWeAreWorking = DAH
 					for {
 						//fmt.Println(" we have a start dah")
 						if waitForDahTimeDown() { // if timed out return true
-							
 							//fmt.Println(" we continue dit")
 							save_mark(mark)
 							set_last()
 							continue // another dah
 						} else {
-							isPossibleLetter = waitForLetterUp()
+							// should we return here for up processing?
+							fmt.Println("waitForDahTimeDown retured false")
+							fmt.Println("Dah Up check letter ")
+							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
-								isWord = waitForWordUP{
-									if isWord {
-										save_mark(SPACE)
-										message := createMessageForWord()
-										fmt.Println(message)
-										//sendTcp(message)
-										return
-									} else {
-										save_mark(LETTER)
-
-
-										return
-									}
+								fmt.Println("Dah Up check word ")
+								isWord := waitForWordUP()
+								if isWord {
+									fmt.Println("Is word ")
+									save_mark(SPACE)
+									message := createMessageForWord()
+									fmt.Println(message)
+									clearMarks()
+									entered = false
+									entered1 = false
+									markWeAreWorking = Unknown
+									//sendTcp(message)
+									return
+								} else {
+									fmt.Println("waitForWordUP retured false")
+									fmt.Println("Is letter ")
+									save_mark(LETTER)
+									return
 								}
-							}
-							fmt.Println(" end dah")
-							// entered  = false
-							// entered1 = false
-							// pin1.PullUp()
-							// pin2.PullUp()
+							} // we came up from waiting for letter 
+							// not sure this can happen
+							fmt.Println("waitForLetterUp retured false")
+							entered = false
+							entered1 = false
+							markWeAreWorking = Unknown
 							return
 						}
+						fmt.Println(" end dah")
+						return
 					} // end for loop
-				}
+				} // end of else
 				fmt.Print("not a dit or a Dah")
 			} else  { // key == 3 up start over?
 				fmt.Println(" start over")
@@ -321,6 +352,8 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 				pin2.PullUp()
 				return // wait for next down
 			}
+			fmt.Print(mark)
+			fmt.Println(" mark")
 			// start next mark timing
 			fmt.Println(marks)
 			// fixme end loop on pin up with time
@@ -330,6 +363,15 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			pin1.PullUp()
 			pin2.PullUp()
 			return
+		} else { // entered1 = false we got here because key went up; last is still set
+			fmt.Println("entered1 true")
+			if markWeAreWorking == DIT {
+				fmt.Println("markWeAreWorking DIT")
+			} else if markWeAreWorking == DAH { // 
+				fmt.Println("markWeAreWorking DAH")
+			} else {
+				fmt.Println("key up somehow markWeAreWorking not set")
+			}
 		}
 	})
 	if err != nil {
@@ -413,26 +455,26 @@ func B2I( b gpio.Level) int8 {
 func createMessageForWord() string {
 	var s = "[["
 	var sz = len(s)
-	bool firstMark = true
-	for mark := marks {
+	for _, mark := range marks {
 		if mark == DIT {
-			s += '"DIT,"'
+			s += "\"DIT\","
 		} else if mark == DAH {
-			s += '"DAH,"'
-		} else if mark = LETTER {
-			sz = len(toSend)
+			s += "\"DAH\","
+		} else if mark == LETTER {
+			sz = len(s)
 			if sz > 0 && s[sz-1] == ',' {
 			    s = s[:sz-1]
 			}
 			s += "]["
 		} else if mark == SPACE {
-			sz = len(toSend)
+			sz = len(s)
 			if sz > 0 && s[sz-1] == ',' {
 			    s = s[:sz-1]
 			}
 			s += "]]"
 			return s
 		}
-	}
+	} // end loop
+	return s;
 }
 		
