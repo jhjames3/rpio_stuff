@@ -115,7 +115,7 @@ func getNano(last time.Time) int64 {
 	return ns
 }
 
-func waitForLetterUp() {
+func waitForLetterUp() bool {
 	for {
 		key := key()
 		if key == 3 {
@@ -135,7 +135,7 @@ func waitForLetterUp() {
 	return false
 }
 
-func waitForWordUP() {
+func waitForWordUP() bool {
 	for {
 		key := key()
 		if key == 3 {
@@ -196,7 +196,7 @@ func waitForStableDown() bool {
 }
 
 func watch_pin_goBoth (pin *gpio.Pin, err error ) {
-	
+	var isWord = false
 	err = pin.Watch(gpio.EdgeBoth, func(pin *gpio.Pin) {
 		entered  = false
 		entered1 = false
@@ -253,9 +253,9 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dit in this time down
 						} else {
-							isPossibleLetter = waitForLetterUp()
+							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
-								isWord = waitForWordUP{
+								isWord := waitForWordUP() 
 									if isWord {
 										save_mark(SPACE)
 										message := createMessageForWord()
@@ -286,30 +286,47 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dah
 						} else {
-							isPossibleLetter = waitForLetterUp()
+							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
-								isWord = waitForWordUP{
-									if isWord {
-										save_mark(SPACE)
-										message := createMessageForWord()
-										fmt.Println(message)
-										//sendTcp(message)
-										return
-									} else {
-										save_mark(LETTER)
-
-
-										return
-									}
+								isWord := waitForWordUP()
+								if isWord {
+									save_mark(SPACE)
+									message := createMessageForWord()
+									fmt.Println(message)
+									//sendTcp(message)
+									return
+								} else {
+									save_mark(LETTER)
+									return
 								}
 							}
-							fmt.Println(" end dah")
-							// entered  = false
-							// entered1 = false
-							// pin1.PullUp()
-							// pin2.PullUp()
+							if isWord {
+								save_mark(SPACE)
+								message := createMessageForWord()
+								fmt.Println(message)
+								//sendTcp(message)
+								return
+							} else {
+								save_mark(LETTER)
+								return
+							}
+						}
+						if isWord {
+							save_mark(SPACE)
+							message := createMessageForWord()
+							fmt.Println(message)
+							//sendTcp(message)
+							return
+						} else {
+							save_mark(LETTER)
 							return
 						}
+						fmt.Println(" end dah")
+						// entered  = false
+						// entered1 = false
+						// pin1.PullUp()
+						// pin2.PullUp()
+						return
 					} // end for loop
 				}
 				fmt.Print("not a dit or a Dah")
@@ -330,7 +347,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 			pin1.PullUp()
 			pin2.PullUp()
 			return
-		}
 	})
 	if err != nil {
 		panic(err)
@@ -413,26 +429,26 @@ func B2I( b gpio.Level) int8 {
 func createMessageForWord() string {
 	var s = "[["
 	var sz = len(s)
-	bool firstMark = true
-	for mark := marks {
+	for _, mark := range marks {
 		if mark == DIT {
-			s += '"DIT,"'
+			s += "\"DIT,\""
 		} else if mark == DAH {
-			s += '"DAH,"'
-		} else if mark = LETTER {
-			sz = len(toSend)
+			s += "\"DAH,\""
+		} else if mark == LETTER {
+			sz = len(s)
 			if sz > 0 && s[sz-1] == ',' {
 			    s = s[:sz-1]
 			}
 			s += "]["
 		} else if mark == SPACE {
-			sz = len(toSend)
+			sz = len(s)
 			if sz > 0 && s[sz-1] == ',' {
 			    s = s[:sz-1]
 			}
 			s += "]]"
 			return s
 		}
-	}
+	} // end loop
+	return s;
 }
 		
