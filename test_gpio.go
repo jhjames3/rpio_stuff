@@ -43,6 +43,7 @@ func clearMarks() {
 	for i,_ := range marks {
 		marks[i] = Unknown
 	}
+	marIndex = 0
 }
 
 func save_mark (mark Mark) {
@@ -84,6 +85,7 @@ func waitForDitTimeDown() bool {
 				continue
 			}	
 		} else {
+			set_last()
 			break
 		}
 	}
@@ -107,6 +109,7 @@ func waitForDahTimeDown() bool {
 				continue
 			}	
 		} else {
+			set_last()
 			break
 		}
 	}
@@ -137,7 +140,8 @@ func waitForLetterUp() bool {
 			} else {
 				continue
 			}	
-		} else {
+		} else { // set last here ??? for next mark???
+			//set_last()
 			break 
 		}
 	}
@@ -157,7 +161,8 @@ func waitForWordUP() bool {
 			} else {
 				continue
 			}	
-		} else {
+		} else { // set last here ??? for next mark???
+			set_last()
 			break 
 		}
 	}
@@ -191,8 +196,8 @@ func waitForStableDown() bool {
 		if key != 3 {
 			ns := getNano(last) 
 			if ns > WAITFORBOUNCE {
-				fmt.Print(ns)
-				fmt.Println(" key down")
+				//fmt.Print(ns)
+				fmt.Println(ns + " key down")
 				return true
 			}
 		} else {
@@ -248,14 +253,14 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 		// possible bounch
 		CheckNext:
 		if !entered1 {
-			fmt.Println("entered1 false")
+			//fmt.Println("entered1 false")
 			entered1 = true
-			fmt.Println("entered1 true")
+			//fmt.Println("entered1 true")
 			key := key()
 			if key != 3 { // key down
 				mark = key_read()
-				fmt.Print(mark)
-				fmt.Println(" mark")
+				//fmt.Print(mark)
+				fmt.Println(mark +" mark")
 				if mark == DIT {
 					markWeAreWorking = DIT
 					// start For for number of marks
@@ -272,6 +277,7 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							fmt.Println("waitForDitTimeDown retured false")
 							isPossibleLetter := waitForLetterUp()
 							if (isPossibleLetter) {
+								fmt.Println("waitforletterup returned true")
 								isWord := waitForWordUP() 
 									if isWord {
 										save_mark(SPACE)
