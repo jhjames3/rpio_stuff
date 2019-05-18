@@ -253,13 +253,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dit in this time down
 						} else {
-<<<<<<< HEAD
-							fmt.Println(" we have a end dit")
-							entered  = false
-							entered1 = false
-							pin1.PullUp()
-							pin2.PullUp()
-=======
 							isPossibleLetter = waitForLetterUp()
 							if (isPossibleLetter) {
 								isWord = waitForWordUP{
@@ -280,7 +273,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							// entered1 = false
 							// pin1.PullUp()
 							// pin2.PullUp()
->>>>>>> 2197453a5e63c1e2778700280801f26f1a577885
 							return
 						}
 					} // end for loop
@@ -294,13 +286,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							set_last()
 							continue // another dah
 						} else {
-<<<<<<< HEAD
-							fmt.Println(" we have a end dah")
-							entered  = false
-							entered1 = false
-							pin1.PullUp()
-							pin2.PullUp()
-=======
 							isPossibleLetter = waitForLetterUp()
 							if (isPossibleLetter) {
 								isWord = waitForWordUP{
@@ -323,7 +308,6 @@ func watch_pin_goBoth (pin *gpio.Pin, err error ) {
 							// entered1 = false
 							// pin1.PullUp()
 							// pin2.PullUp()
->>>>>>> 2197453a5e63c1e2778700280801f26f1a577885
 							return
 						}
 					} // end for loop
