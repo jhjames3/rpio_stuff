@@ -148,3 +148,111 @@ last: 2019-05-17 13:43:04.527131171 -0400 EDT
  we have a end dit
 both up 
 
+==================
+testing reading letter C
+
+Watching Pins 13 and 27...wpm = 10
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-18 14:02:49.249681564 -0400 EDT
+1057484 key down
+4971644 key down
+[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+entered1 true
+1 mark
+waitForDahTimeDown retured false
+Dah Up check letter 
+key up
+Dah Up check word 
+key up
+Is word 
+[1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+[["DAH"]]
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-18 14:02:49.439907129 -0400 EDT
+110883 key down
+1714557 key down
+[0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+entered1 true
+2 mark
+waitForDitTimeDown retured false
+key up
+key up
+[0 0 2 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+[["DIT"]]
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-18 14:02:49.604162252 -0400 EDT
+105467 key down
+1701016 key down
+[0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+entered1 true
+1 mark
+waitForDahTimeDown retured false
+Dah Up check letter 
+key up
+Dah Up check word 
+key up
+Is word 
+[0 0 0 0 1 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+[["DAH"]]
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-18 14:02:49.852974484 -0400 EDT
+114426 key down
+1710027 key down
+[0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+entered1 false
+entered1 true
+2 mark
+waitForDitTimeDown retured false
+ end dit
+At Start
+entered: true
+entered1: true
+entered1 true
+markWeAreWorking DIT
+At Start
+entered: true
+entered1: true
+entered1 true
+markWeAreWorking DIT
+At Start
+entered: true
+entered1: true
+entered1 true
+markWeAreWorking DIT
+
+
