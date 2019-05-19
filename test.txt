@@ -234,3 +234,146 @@ At Start
 entered: false
 entered1: false
 both up 
+
+
+==================
+
+send cq with latest
+
+^Cpi@raspberrypi:~/go/src/rpio_stuff $ go run test_gpio.go 
+letter time 360
+word time 840
+Watching Pins 13 and 27...wpm = 10
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:41.986546941 -0400 EDT
+1251603 key down
+1700401 key down
+[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+1 mark
+last: 2019-05-19 13:06:42.27830777 -0400 EDT
+waitForDahTimeDown returned false
+Dah Up check letter 
+waitForLetterUp retured false
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:42.315973527 -0400 EDT
+222602 key down
+1702016 key down
+[1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+2 mark
+last: 2019-05-19 13:06:42.369230134 -0400 EDT
+waitForDitTimeDown returned false
+waitForLetterUp retured false
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:42.430486409 -0400 EDT
+177446 key down
+1700454 key down
+[1 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+1 mark
+last: 2019-05-19 13:06:42.697503292 -0400 EDT
+waitForDahTimeDown returned false
+Dah Up check letter 
+waitForLetterUp retured false
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:42.723932223 -0400 EDT
+65937 key down
+1701026 key down
+[1 2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+2 mark
+last: 2019-05-19 13:06:42.773269594 -0400 EDT
+waitForDitTimeDown returned false
+361 key up
+[1 2 1 2 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+waitforletterup returned true
+last: 2019-05-19 13:06:43.504184205 -0400 EDT
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:43.504391651 -0400 EDT
+28802 key down
+1700610 key down
+[1 2 1 2 4 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+1 mark
+[1 2 1 2 4 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-19 13:06:43.86551962 -0400 EDT
+last: 2019-05-19 13:06:44.045537333 -0400 EDT
+waitForDahTimeDown returned false
+Dah Up check letter 
+waitForLetterUp retured false
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:44.075210922 -0400 EDT
+90208 key down
+1700610 key down
+[1 2 1 2 4 1 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+2 mark
+last: 2019-05-19 13:06:44.158883247 -0400 EDT
+waitForDitTimeDown returned false
+waitForLetterUp retured false
+At Start
+entered: false
+entered1: false
+gitgit
+last: 2019-05-19 13:06:44.195322661 -0400 EDT
+115051 key down
+1700193 key down
+[1 2 1 2 4 1 1 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+1 mark
+[1 2 1 2 4 1 1 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+last: 2019-05-19 13:06:44.556440786 -0400 EDT
+last: 2019-05-19 13:06:44.582341388 -0400 EDT
+waitForDahTimeDown returned false
+Dah Up check letter 
+361 key up
+[1 2 1 2 4 1 1 2 1 1 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+Dah Up check word 
+841 key up
+Is word 
+[1 2 1 2 4 1 1 2 1 1 4 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+[["DAH","DIT","DAH","DIT"]["DAH","DAH","DIT","DAH","DAH"][]]
+At Start
+entered: false
+entered1: false
+both up 
+At Start
+entered: false
+entered1: false
+both up 
